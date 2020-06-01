@@ -1,0 +1,228 @@
+<app-block-ui [isBlocked]="isBlocked"></app-block-ui>
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-10">
+                <div class="row">
+                    <div class="col-sm-10">
+                        <h1 class="m-0 text-dark" *ngIf="!isEdit">Create Product</h1>
+                        <h1 class="m-0 text-dark" *ngIf="isEdit">Update Product</h1>
+                    </div>
+                    <div *ngIf="isEdit" class="col-sm-2 float-sm-right"> <button type="button"
+                            class="btn btn-block btn-danger" (click)="confirmationModal.showModal()">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<app-delete-modal #confirmationModal [message]="'Do you want to delete the selected product'" (delete)="delete()">
+</app-delete-modal>
+
+<div class="row">
+    <div class="col-md-10">
+        <div class="card card-primary">
+            <form [formGroup]="productForm">
+                <div class="card-body">
+                    <div class="form-froup row">
+                        <div class="col-md-6">
+                            <label for="product">Select Images :</label>
+                            <label class="fileContainer custom-file">
+                                <div id="floatContainer" class="float-container">
+                                    <span class='file-select'>Choose Images</span>
+                                    <input type="file" id="file" name="file" multiple (change)="detectFiles($event)"
+                                        class="inputfile">
+                                    <span class="file-selected">
+                                        {{urlCount}} files selected
+                                    </span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <label for="product">Category :</label>
+                            <select class="form-control custom-select" style="width: 100%;"
+                                formControlName="categoryId">
+                                <option value="0" selected="selected">Select Category</option>
+                                <option *ngFor="let category of categories" [value]="category.key">{{category.value}}
+                                </option>
+                            </select>
+                            <div [hidden]="productForm.get('categoryId').valid || (productForm.get('categoryId').pristine && !isFormSubmitted)"
+                                class="alert alert-warning">
+                                <small
+                                    *ngIf="productForm.get('categoryId').errors && productForm.get('categoryId').errors.required">
+                                    Category is Required
+                                    <br>
+                                </small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="product">Product :</label>
+                            <input type="text" class="form-control" id="product" placeholder="Enter Product Name"
+                                formControlName="name">
+                            <div [hidden]="productForm.get('name').valid || (productForm.get('name').pristine && !isFormSubmitted)"
+                                class="alert alert-warning">
+                                <small
+                                    *ngIf="productForm.get('name').errors && productForm.get('name').errors.required">
+                                    Product Name is Required
+                                    <br>
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Description :</label>
+                        <textarea class="form-control" rows="6" placeholder="Enter ..."
+                            formControlName="description"></textarea>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <label for="description">Seperation Factor :</label>
+                            <select class="form-control custom-select" style="width: 100%;"
+                                formControlName="seperationFactor">
+                                <option value="0" selected="selected">None</option>
+                                <option value="1">Color</option>
+                                <option value="2">Sets</option>
+                                <option value="3">Weight</option>
+                            </select>
+                            <div [hidden]="productForm.get('seperationFactor').valid || (productForm.get('seperationFactor').pristine && !isFormSubmitted)"
+                                class="alert alert-warning">
+                                <small
+                                    *ngIf="productForm.get('seperationFactor').errors && productForm.get('seperationFactor').errors.required">
+                                    Category is Required
+                                    <br>
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="productlist-wrapper">
+                    <form [formGroup]="productItemForm">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="seperationFactorValue">Seperation Factor Value :</label>
+                                    <input type="text" class="form-control" id="seperationFactorValue"
+                                        placeholder="Enter Seperation Factor Value"
+                                        formControlName="seperationFactorValue">
+                                </div>
+                                <div class="form-group">
+                                    <label for="availableQuantity">Available Quantity :</label>
+                                    <input type="number" class="form-control" id="availableQuantity"
+                                        placeholder="Enter Product Name" formControlName="availableQuantity">
+                                    <div [hidden]="productItemForm.get('availableQuantity').valid || (productItemForm.get('availableQuantity').pristine && !isProductItemFormSubmitted)"
+                                        class="alert alert-warning">
+                                        <small
+                                            *ngIf="productItemForm.get('availableQuantity').errors && productItemForm.get('availableQuantity').errors.required">
+                                            Available Quantity is Required
+                                            <br>
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="purchasedPrice">Purchased Price :</label>
+                                    <input type="number" class="form-control" id="purchasedPrice"
+                                        placeholder="Enter Purchased Price" formControlName="purchasedPrice">
+                                    <div [hidden]="productItemForm.get('purchasedPrice').valid || (productItemForm.get('purchasedPrice').pristine && !isProductItemFormSubmitted)"
+                                        class="alert alert-warning">
+                                        <small
+                                            *ngIf="productItemForm.get('purchasedPrice').errors && productItemForm.get('purchasedPrice').errors.required">
+                                            Purchased Price is Required
+                                            <br>
+                                        </small>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="invoicedPrice">Invoiced Price :</label>
+                                    <input type="number" class="form-control" id="invoicedPrice"
+                                        placeholder="Enter Invoiced Price" formControlName="invoicedPrice">
+                                    <div [hidden]="productItemForm.get('invoicedPrice').valid || (productItemForm.get('invoicedPrice').pristine && !isProductItemFormSubmitted)"
+                                        class="alert alert-warning">
+                                        <small
+                                            *ngIf="productItemForm.get('invoicedPrice').errors && productItemForm.get('invoicedPrice').errors.required">
+                                            Invoiced is Required
+                                            <br>
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="reorderMargin">Re-Order Margin :</label>
+                                    <input type="number" class="form-control" id="reorderMargin"
+                                        placeholder="Enter Reorder Margin" formControlName="reorderMargin">
+                                </div>
+                                <div class="form-group mt">
+                                    <button type="button" *ngIf="!isLineItemEdit" class="btn btn-primary float-sm-right mt-lg-2"
+                                        (click)="addLineItem()">Add</button>
+                                    <button type="button" *ngIf="isLineItemEdit" class="btn btn-primary float-sm-right mt-lg-2"
+                                        (click)="updateLineItem()">Update</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-body table-responsive p-0">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Seperation Factor</th>
+                                                <th>Purchased Price</th>
+                                                <th>Invoiced Proce</th>
+                                                <th>Available Qty</th>
+                                                <th>Re-Order Margin</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let item of productItems;let i=index">
+                                                <td align="center">{{i+1}}</td>
+                                                <td align="center">{{item.seperationFactorValue}}</td>
+                                                <td align="center">{{item.purchasedPrice}}</td>
+                                                <td align="center">{{item.invoicedPrice}}</td>
+                                                <td align="center">{{item.availableQuantity}}</td>
+                                                <td align="center">{{item.reorderMargin}}</td>
+                                                <td align="center">
+                                                    <a class="btn-effect" (click)="editLineItem(i)"><i
+                                                            class="fas fa-edit" aria-hidden="true"></i></a>
+                                                    <a class="btn-effect" (click)="removeLineItem(i)"><i
+                                                            class="fa fa-trash" aria-hidden="true"></i></a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-footer">
+                    <button *ngIf="!isEdit" type="button" class="btn btn-primary float-sm-right"
+                        (click)="save()">Save</button>
+                    <button *ngIf="isEdit" type="button" class="btn btn-primary float-sm-right"
+                        (click)="updateConfirmationModal.showModal()">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="col-md-2" *ngIf="isFilesSelected">
+        <div class="upcard-wrapper">
+            <div class="upcard" *ngFor="let url of urls">
+                <img [src]="url"><span class="delete-entry" (click)="deleteImage(url)">x</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<app-update-modal #updateConfirmationModal [message]="'Do you want to update the selected product'" (update)="update()">
+</app-update-modal>

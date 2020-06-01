@@ -1,0 +1,18 @@
+<div bsModal #updateConfirmationModal="bs-modal" class="modal fade" id="modal-secondary" [config]="{keyboard: false, backdrop: 'static'}">
+    <div class="modal-dialog">
+        <div class="modal-content bg-secondary">
+            <div class="modal-header">
+                <h4 class="modal-title">Update Confirmation</h4>
+                <button type="button" class="close" (click)="reject()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <p>{{message}}&hellip;</p>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-outline-light" (click)="reject()">Close</button>
+                <button type="button" class="btn btn-outline-light" (click)="confirm()">Update</button>
+            </div>
+        </div>
+    </div>
+</div>

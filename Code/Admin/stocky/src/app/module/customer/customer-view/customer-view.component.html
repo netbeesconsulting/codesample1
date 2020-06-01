@@ -1,0 +1,66 @@
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-10">
+                <h1 class="m-0 text-dark">View Cutomers</h1>
+            </div>
+            <div class="col-sm-2 float-sm-right">
+                <button type="button" class="btn btn-block btn-primary"
+                    [routerLink]="['/customer/create']"><i class="fas fa-user-plus"></i> Add customer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title"></h3>
+
+                <div class="card-tools">
+                    <div class="input-group input-group-sm" style="width: 250px;">
+                        <input type="text" name="table_search" class="form-control float-right" placeholder="Search"
+                            (keyup)="searchTerm$.next($event.target.value)">
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body table-responsive p-0">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Name</th>
+                            <th>Company</th>
+                            <th>Address</th>
+                            <th>Contact</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let customer of customers;let i=index">
+                            <td>{{i+1}}</td>
+                            <td>{{customer.name}}</td>
+                            <td>{{customer.company}}</td>
+                            <td>{{customer.address}}</td>
+                            <td>{{customer.contact}}</td>
+                            <td>
+                                <button type="button" class="table-btn edit" title="Edit"
+                                    (click)="editCustomer(customer.id)"><i class="fas fa-user-edit"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<pagination [boundaryLinks]="true" [totalItems]="searchRequestModel.totalRecords"
+    [(ngModel)]="searchRequestModel.currentPage" (pageChanged)="pageChanged($event)"
+    [itemsPerPage]="searchRequestModel.take" class="pagination-sm float-md-right" [maxSize]="maxSize" previousText="&lsaquo;"
+    nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
+</pagination>

@@ -1,0 +1,279 @@
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-12">
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="header-wrapper">
+              <a
+                class="back-btn"
+                [routerLink]="['/order/view']"
+                routerLinkActive="router-link-active"
+                ><i class="fas fa-arrow-left"></i
+              ></a>
+              <h1 class="m-0 text-dark" *ngIf="!isEdit">Create Order</h1>
+              <h1 class="m-0 text-dark" *ngIf="isEdit">Update Order</h1>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="card card-primary">
+      <form [formGroup]="orderForm">
+        <div class="card-body">
+          <div class="form-group row">
+            <div class="col-md-12">
+              <label for="customerId">Select Customer :</label>
+              <select
+                class="form-control custom-select"
+                style="width: 100%;"
+                formControlName="customerId"
+              >
+                <option value="0" selected="selected">Select Customer</option>
+                <option
+                  *ngFor="let customer of customers"
+                  [value]="customer.key"
+                  >{{ customer.value }}
+                </option>
+              </select>
+              <div
+                [hidden]="
+                  orderForm.get('customerId').valid ||
+                  (orderForm.get('customerId').pristine && !isFormSubmitted)
+                "
+                class="alert alert-warning"
+              >
+                <small
+                  *ngIf="
+                    orderForm.get('customerId').errors &&
+                    orderForm.get('customerId').errors.required
+                  "
+                >
+                  Customer is Required
+                  <br />
+                </small>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-md-6">
+              <label for="productId">Product :</label>
+              <select
+                class="form-control custom-select"
+                style="width: 100%;"
+                id="productId"
+                [ngModelOptions]="{ standalone: true }"
+                [(ngModel)]="orderItem.productId"
+                (change)="onProductChange($event)"
+                #productId="ngModel"
+                required
+              >
+                <option value="0" selected="selected">Select Product</option>
+                <option *ngFor="let product of products" [value]="product.key"
+                  >{{ product.value }}
+                </option>
+              </select>
+              <div
+                class="alert alert-warning"
+                *ngIf="
+                  productId.errors?.required &&
+                  (productId.dirty || productId.touched)
+                "
+              >
+                Product is required.
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label for="productItemId">Product Item :</label>
+              <select
+                class="form-control custom-select"
+                style="width: 100%;"
+                id="productItemId"
+                (change)="onProductItemChange($event)"
+                [(ngModel)]="orderItem.productItemId"
+                [ngModelOptions]="{ standalone: true }"
+                #productItemId="ngModel"
+                required
+              >
+                <option value="0" selected="selected"
+                  >Select Product Item</option
+                >
+                <option
+                  *ngFor="let productItem of productItems"
+                  [value]="productItem.key"
+                >
+                  {{ productItem.value }}
+                </option>
+              </select>
+              <div
+                class="alert alert-warning"
+                *ngIf="
+                  productItemId.errors?.required &&
+                  (productItemId.dirty || productItemId.touched)
+                "
+              >
+                ProductItem is required.
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="row">
+              <div class="col-md-4">
+                <label for="unitPrice">Unit Price :</label>
+                <input
+                  class="form-control"
+                  type="text"
+                  [(ngModel)]="orderItem.unitPrice"
+                  disabled
+                  [ngModelOptions]="{ standalone: true }"
+                />
+              </div>
+              <div class="col-md-4">
+                <label for="availableQty">Available Qauntity :</label>
+                <input
+                  class="form-control"
+                  type="text"
+                  [(ngModel)]="availableQuantity"
+                  disabled
+                  [ngModelOptions]="{ standalone: true }"
+                />
+              </div>
+              <div class="col-md-4">
+                <label for="quantity">Quantity :</label>
+                <input
+                  class="form-control"
+                  type="number"
+                  min="0"
+                  max="availableQuantity"
+                  #quantity="ngModel"
+                  [(ngModel)]="orderItem.quantity"
+                  [ngModelOptions]="{ standalone: true }"
+                  id="quantity"
+                  required
+                />
+                <div
+                  class="alert alert-warning"
+                  *ngIf="
+                    quantity.errors?.required &&
+                    (quantity.dirty || quantity.touched)
+                  "
+                >
+                  Quantity is required.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group mt">
+            <button
+              type="button"
+              class="btn btn-primary float-sm-right mt-lg-2"
+              (click)="addOrderItem()"
+            >
+              Add to list
+            </button>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="orderlist-wrapper">
+            <div class="row">
+              <div class="col-12">
+                <div class="card">
+                  <div class="card-body table-responsive p-0">
+                    <table class="table table-hover">
+                      <thead>
+                        <tr>
+                          <th>#</th>
+                          <th>Product</th>
+                          <th>Unit Price</th>
+                          <th>Quantity</th>
+                          <th>Discount Type</th>
+                          <th *ngIf="isDiscountSelected">
+                            Discount Type Value
+                          </th>
+                          <th *ngIf="isDiscountSelected">Discount</th>
+                          <th>Total</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let item of orderItems; let i = index">
+                          <td>{{ i + 1 }}</td>
+                          <td>{{ item.productName }}</td>
+                          <td>Rs.{{ item.unitPrice | number: "1.2-2" }}</td>
+                          <td>{{ item.quantity }}</td>
+                          <td>
+                            <select
+                              class="form-control custom-select"
+                              style="width: 100%;"
+                              [ngModelOptions]="{ standalone: true }"
+                              [(ngModel)]="item.discountType"
+                              (change)="onDiscountTypeChange($event, item)"
+                            >
+                              <option value="1" [selected]="true">None</option>
+                              <option value="2">Percentage</option>
+                              <option value="3">Value</option>
+                            </select>
+                          </td>
+                          <td *ngIf="isDiscountSelected">
+                            <input
+                              class="form-control"
+                              type="text"
+                              (keyup)="calculateDiscount(item)"
+                              [(ngModel)]="item.discountTypeValue"
+                              [ngModelOptions]="{ standalone: true }"
+                            />
+                          </td>
+                          <td *ngIf="isDiscountSelected">
+                            Rs.{{ item.discount | number: "1.2-2" }}
+                          </td>
+
+                          <td>Rs.{{ item.totalPayable | number: "1.2-2" }}</td>
+                          <td>
+                            <a class="btn-effect" (click)="removeLineItem(i)"
+                              ><i class="fa fa-trash" aria-hidden="true"></i
+                            ></a>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-footer">
+          <button
+            *ngIf="!isEdit"
+            type="button"
+            class="btn btn-primary float-sm-right"
+            (click)="save()"
+          >
+            Save
+          </button>
+          <button
+            *ngIf="isEdit"
+            type="button"
+            class="btn btn-primary float-sm-right"
+            (click)="updateConfirmationModal.showModal()"
+          >
+            Update
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<app-update-modal
+  #updateConfirmationModal
+  [message]="'Do you want to update the selected order'"
+  (update)="update()"
+>
+</app-update-modal>

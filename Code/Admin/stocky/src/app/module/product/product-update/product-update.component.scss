@@ -1,0 +1,136 @@
+.inputfile {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
+
+.inputfile+label {
+    font-weight: 700;
+    color: black;
+    display: inline-block;
+}
+
+.inputfile:focus+label,
+.inputfile+label:hover {
+    color: blue;
+}
+
+.inputfile+label {
+    cursor: pointer;
+    /* "hand" cursor */
+}
+
+.inputfile:focus+label {
+    outline: 1px dotted #000;
+    outline: -webkit-focus-ring-color auto 5px;
+}
+
+.inputfile+label * {
+    pointer-events: none;
+}
+
+.delete-entry {
+    cursor: pointer;
+}
+
+.upcard-wrapper {
+    display: inline-block;
+
+    .upcard {
+        position: relative;
+        margin: 2px;
+        position: relative;
+        margin: 2px;
+        background: #fff;
+        border-radius: 5px;
+        padding: 5px;
+
+        img {
+            width: 230px;
+            height: 160px;
+            object-fit: contain;
+        }
+
+        span {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            width: 20px;
+            height: 20px;
+            background: #da6666;
+            border-radius: 50%;
+            line-height: 15px;
+            text-align: center;
+            color: #fff;
+        }
+    }
+}
+
+.float-container {
+    display: flex;
+    border: dotted 1px #ccc;
+    border: solid 1px #ccc !important;
+    height: 38px;
+    border-radius: 5px;
+    padding: 5px;
+    justify-content: space-between;
+}
+
+.custom-file {
+    width: 100% !important;
+    height: 42px;
+
+    .file-select {
+        z-index: 5;
+        text-overflow: ellipsis;
+        width: 173px;
+        text-align: left;
+        overflow: hidden;
+    }
+}
+
+.fileContainer [type=file] {
+    cursor: inherit;
+    display: block;
+    font-size: 0px;
+    filter: alpha(opacity=0);
+    min-height: 100%;
+    min-width: 100%;
+    opacity: 0;
+    position: absolute;
+    right: 0;
+    text-align: right;
+    top: 0;
+    visibility: hidden;
+}
+
+.file-select {
+    border-radius: inherit;
+    padding-left: 9px;
+    background: #f4f6f9;
+}
+
+.file-selected {
+    margin: 0 3px;
+    color: #ccc;
+}
+
+.productlist-wrapper {
+    padding: 33px 85px;
+    margin: 0px 85px 13px 85px;
+    background: #f4f6f9;
+}
+
+@media only screen and (max-width: 960px) {
+    .productlist-wrapper {
+        margin:  0px 30px 13px 30px;
+        padding: 12px 30px;
+    }
+}
+
+.mt {
+    margin-top: 38px !important;
+}

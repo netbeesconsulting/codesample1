@@ -1,0 +1,235 @@
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-md-12">
+        <div class="row">
+          <div class="col-sm-10">
+            <div class="header-wrapper">
+              <a
+                class="back-btn"
+                [routerLink]="['/customer/view']"
+                routerLinkActive="router-link-active"
+                ><i class="fas fa-arrow-left"></i
+              ></a>
+              <h1 class="m-0 text-dark" *ngIf="!isEdit">Create Customer</h1>
+              <h1 class="m-0 text-dark" *ngIf="isEdit">Update Customer</h1>
+            </div>
+          </div>
+          <div *ngIf="isEdit" class="col-sm-2 float-sm-right">
+            <button
+              type="button"
+              class="btn btn-block btn-danger"
+              (click)="confirmationModal.showModal()"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-delete-modal
+  #confirmationModal
+  [message]="'Do you want to delete the selected customer'"
+  (delete)="delete()"
+>
+</app-delete-modal>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="card card-primary">
+      <form [formGroup]="customerForm">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="name">Name :</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="name"
+                  placeholder="Enter name"
+                  formControlName="name"
+                />
+                <div
+                  [hidden]="
+                    customerForm.get('name').valid ||
+                    (customerForm.get('name').pristine && !isFormSubmitted)
+                  "
+                  class="alert alert-warning"
+                >
+                  <small
+                    *ngIf="
+                      customerForm.get('name').errors &&
+                      customerForm.get('name').errors.required
+                    "
+                  >
+                    Name is Required <br />
+                  </small>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="company">Company :</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="company"
+                  placeholder="Enter company"
+                  formControlName="company"
+                />
+                <div
+                  [hidden]="
+                    customerForm.get('company').valid ||
+                    (customerForm.get('company').pristine && !isFormSubmitted)
+                  "
+                  class="alert alert-warning"
+                >
+                  <small
+                    *ngIf="
+                      customerForm.get('company').errors &&
+                      customerForm.get('company').errors.required
+                    "
+                  >
+                    Company is Required <br />
+                  </small>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="address">Address :</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="address"
+                  placeholder="Enter address"
+                  formControlName="address"
+                />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="contact">Contact :</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="contact"
+                  placeholder="Enter contact"
+                  formControlName="contact"
+                />
+                <div
+                  [hidden]="
+                    customerForm.get('contact').valid ||
+                    (customerForm.get('contact').pristine && !isFormSubmitted)
+                  "
+                  class="alert alert-warning"
+                >
+                  <small
+                    *ngIf="
+                      customerForm.get('contact').errors &&
+                      customerForm.get('contact').errors.required
+                    "
+                  >
+                    Contact is Required <br />
+                  </small>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="username">Username :</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  [ngClass]="{ disbaled: isEdit }"
+                  id="username"
+                  placeholder="Enter username"
+                  formControlName="username"
+                />
+                <div
+                  [hidden]="
+                    customerForm.get('username').valid ||
+                    (customerForm.get('username').pristine && !isFormSubmitted)
+                  "
+                  class="alert alert-warning"
+                >
+                  <small
+                    *ngIf="
+                      customerForm.get('username').errors &&
+                      customerForm.get('username').errors.required
+                    "
+                  >
+                    Username is Required <br />
+                  </small>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="password">Password :</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  [ngClass]="{ disbaled: isEdit }"
+                  id="password"
+                  placeholder="Enter password"
+                  formControlName="password"
+                />
+                <div
+                  [hidden]="
+                    customerForm.get('password').valid ||
+                    (customerForm.get('password').pristine && !isFormSubmitted)
+                  "
+                  class="alert alert-warning"
+                >
+                  <small
+                    *ngIf="
+                      customerForm.get('password').errors &&
+                      customerForm.get('password').errors.required
+                    "
+                  >
+                    Password is Required <br />
+                  </small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-footer">
+          <button
+            *ngIf="!isEdit"
+            type="button"
+            class="btn btn-primary float-sm-right"
+            (click)="save()"
+          >
+            Save
+          </button>
+          <button
+            *ngIf="isEdit"
+            type="button"
+            class="btn btn-primary float-sm-right"
+            (click)="updateConfirmationModal.showModal()"
+          >
+            Update
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<app-update-modal
+  #updateConfirmationModal
+  [message]="'Do you want to update the selected customer'"
+  (update)="update()"
+>
+</app-update-modal>
